@@ -10,7 +10,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "wecloud-packer-linux-aws"
+  ami_name      = "wecloud-packer-ubuntu-02"
   instance_type = "t2.micro"
   region        = "ca-central-1"
   source_ami_filter {
@@ -30,4 +30,19 @@ build {
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
+  provisioner "shell" {
+    environment_vars = [
+      "FOO=hello world",
+    ]
+    inline = [
+      "echo updating system",
+      "sudo apt update",
+      "sudo apt upgrade -y",
+      "echo installing nginx",
+      "sudo apt install -y nginx",
+      "echo starting nginx server",
+      "sudo systemctl start nginx",
+      "sudo systemctl enable nginx"
+    ]
+  }
 }
