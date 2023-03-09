@@ -10,7 +10,7 @@ packer {
 }
 
 source "amazon-ebs" "amzn" {
-  ami_name      = "wecloud-packer-amzn-01"
+  ami_name      = "wecloud-packer-amzn-03"
   instance_type = "t2.micro"
   region        = "ca-central-1"
   source_ami_filter {
@@ -30,18 +30,7 @@ build {
   sources = [
     "source.amazon-ebs.amzn"
   ]
-  provisioner "shell" {
-    environment_vars = [
-      "CLASS=WeCloud",
-    ]
-    inline = [
-      "echo updating system",
-      "sudo yum update && sudo yum upgrade -y",
-      "echo installing nginx",
-      "sudo amazon-linux-extras install -y nginx1",
-      "echo starting nginx server",
-      "sudo systemctl start nginx",
-      "sudo systemctl enable nginx"
-    ]
+  provisioner "ansible" {
+    playbook_file = "aws-amzn-playbook.yml" 
   }
 }

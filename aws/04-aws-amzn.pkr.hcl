@@ -9,40 +9,31 @@ packer {
   }
 }
 
-source "amazon-ebs" "ubuntu" {
-  ami_name      = "wecloud-packer-ubuntu-02"
+source "amazon-ebs" "amzn" {
+  ami_name      = "wecloud-packer-amzn-02"
   instance_type = "t2.micro"
   region        = "ca-central-1"
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*ubuntu-*-22.04-amd64-server-*"
+      name                = "amzn2-ami-hvm-*-x86_64-gp2"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
     most_recent = true
-    owners      = ["099720109477"]
+    owners      = ["amazon"]
   }
-  ssh_username = "ubuntu"
+  ssh_username = "ec2-user"
 }
 
 build {
   name = "wecloud-packer"
   sources = [
-    "source.amazon-ebs.ubuntu"
+    "source.amazon-ebs.amzn"
   ]
   provisioner "shell" {
     environment_vars = [
       "CLASS=WeCloud",
     ]
-    inline = [
-      "echo updating system",
-      "sudo apt update",
-      "sudo apt upgrade -y",
-      "echo installing nginx",
-      "sudo apt install -y nginx",
-      "echo starting nginx server",
-      "sudo systemctl start nginx",
-      "sudo systemctl enable nginx"
-    ]
+    script = "install-nginx.sh" 
   }
 }

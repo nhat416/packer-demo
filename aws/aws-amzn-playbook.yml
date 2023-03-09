@@ -1,0 +1,11 @@
+---
+# aws-amzn-playbook.yml
+- name: 'Provision AWS Amazon Linux 2 Machine'
+  hosts: default
+  become: true
+
+  tasks:
+  - name: install Apache
+    yum:
+      name: 'httpd'
+      state: present
