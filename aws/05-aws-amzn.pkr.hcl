@@ -6,6 +6,10 @@ packer {
       version = ">= 0.0.2"
       source  = "github.com/hashicorp/amazon"
     }
+    ansible = {
+      version = ">= 1.0.2"
+      source  = "github.com/hashicorp/ansible"
+    }
   }
 }
 
@@ -31,6 +35,6 @@ build {
     "source.amazon-ebs.amzn"
   ]
   provisioner "ansible" {
-    playbook_file = "aws-amzn-playbook.yml" 
+    playbook_file = "aws-amzn-playbook.yml"
   }
 }

@@ -1,7 +1,9 @@
 ---
 # aws-amzn-playbook.yml
 - name: 'Provision AWS Amazon Linux 2 Machine'
-  hosts: default
+  hosts: all
+  remote_user: ec2-user
+  become_method: sudo
   become: true
 
   tasks:
