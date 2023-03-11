@@ -10,12 +10,13 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "packer-demo-ubuntu-02"
+  ami_name      = "packer-demo-ubuntu-01"
   instance_type = "t2.micro"
   region        = "ca-central-1"
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*ubuntu-*-22.04-amd64-server-*"
+      name = "ubuntu/images/*ubuntu-*-22.04-amd64-server-*"
+      // ubuntu/images/ubuntu-xenial-16.04-amd64-server-20171011
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -26,23 +27,8 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "wecloud-packer"
+  name = "packer-demo"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
-  provisioner "shell" {
-    environment_vars = [
-      "CLASS=WeCloud",
-    ]
-    inline = [
-      "echo updating system",
-      "sudo apt update",
-      "sudo apt upgrade -y",
-      "echo installing nginx",
-      "sudo apt install -y nginx",
-      "echo starting nginx server",
-      "sudo systemctl start nginx",
-      "sudo systemctl enable nginx"
-    ]
-  }
 }

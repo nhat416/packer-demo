@@ -14,7 +14,7 @@ packer {
 }
 
 source "amazon-ebs" "amzn" {
-  ami_name      = "wecloud-packer-amzn-03"
+  ami_name      = "packer-demo-amzn-03"
   instance_type = "t2.micro"
   region        = "ca-central-1"
   source_ami_filter {
