@@ -14,10 +14,19 @@ provider "aws" {
 
 data "aws_ami" "ami" {
   most_recent = true
-  owners = ["self"]
+  owners      = ["self"]
   filter {
-    name = ""
+    name   = "name"
+    values = ["packer-terraform-demo-fedora-*"]
   }
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+locals {
+  os = "fedora"
 }
 
 resource "aws_vpc" "vpc" {
@@ -31,8 +40,9 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "subnet_public" {
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.cidr_subnet
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = var.cidr_subnet
+  availability_zone = data.aws_availability_zones.available.names[0]
 }
 
 resource "aws_route_table" "rtb_public" {
@@ -83,27 +93,23 @@ resource "aws_security_group" "sg_22_80" {
   }
 }
 
-resource "aws_instance" "demo_server" {
-  most_recent = true
-  filter = {
-    name = 
-    values = 
-  }
+resource "aws_instance" "fedora_server" {
+  ami                         = data.aws_ami.ami.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.subnet_public.id
   vpc_security_group_ids      = [aws_security_group.sg_22_80.id]
   associate_public_ip_address = true
 
   tags = {
-    Name = "wecloud-packer"
+    Name = "wecloud-packer-terraform-${local.os}"
   }
 }
 
 output "ami_id" {
-  value = aws_instance.demo_server.image.id
+  value = data.aws_ami.ami.id
 }
 
 output "public_ip" {
-  value = aws_instance.deom_server.public_ip
+  value = aws_instance.fedora_server.public_ip
 }
 

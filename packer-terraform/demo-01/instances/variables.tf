@@ -14,5 +14,6 @@ variable "environment_tag" {
 
 variable "region"{
   description = "The region Terraform deploys your instance"
+  default = "ca-central-1"
 }
 

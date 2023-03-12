@@ -1,0 +1,18 @@
+---
+# aws-amzn-playbook.yml
+- name: 'Provision AWS Amazon Linux 2 Machine'
+  hosts: all
+  remote_user: fedora
+  become_method: sudo
+  become: true
+
+  tasks:
+  - name: install Apache
+    yum:
+      name: 'httpd'
+      state: present
+  - name: start Apache webserver
+    service:
+      name: 'httpd'
+      state: started
+      enabled: yes

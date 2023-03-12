@@ -18,9 +18,9 @@ variable "region" {
   default = "ca-central-1"
 }
 
-locals { 
-  os = "fedora"
-  ssh_user = "fedora"
+locals {
+  os        = "fedora"
+  ssh_user  = "fedora"
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
 
@@ -51,7 +51,7 @@ build {
   ]
 
   provisioner "ansible" {
-    playbook_file = "../playbooks/aws-amzn-playbook.yml"
+    playbook_file = "../../playbooks/aws-amzn-playbook.yml"
     user          = "${local.ssh_user}"
     use_proxy     = false
     ansible_ssh_extra_args = [
@@ -59,7 +59,7 @@ build {
     ]
   }
 
-/**
+  /**
   provisioner "file" {
     source      = "wecloud.pub"
     destination = "/tmp/wecloud.pub"
