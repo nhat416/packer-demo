@@ -18,9 +18,10 @@ variable "region" {
   default = "ca-central-1"
 }
 
-locals { 
-  os = "amzn"
-  timestamp = regex_replace(timestamp(), "[- TZ:]", "") 
+locals {
+  os           = "amzn"
+  ssh_user = "ec2-user"
+  timestamp    = regex_replace(timestamp(), "[- TZ:]", "")
 }
 
 # source blocks are generated from your builders; a source can be referenced in
@@ -39,7 +40,7 @@ source "amazon-ebs" "amzn" {
     most_recent = true
     owners      = ["amazon"]
   }
-  ssh_username = "ec2-user"
+  ssh_username = "${local.ssh_user}"
 }
 
 # a build block invokes sources and runs provisioning steps on them.

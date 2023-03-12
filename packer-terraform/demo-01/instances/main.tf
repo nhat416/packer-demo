@@ -7,13 +7,17 @@ terraform {
   }
   required_version = ">= 0.14.5"
 }
- data "aws_ami" "ami" {
+data "aws_ami" "ami" {
   most_recent = true
-  owners = ["self"]
+  owners      = ["self"]
   filter {
-    name = "name"
-    values = ["packer-terraform-demo-*"]
+    name   = "name"
+    values = ["packer-terraform-demo-amzn-*"]
   }
+}
+
+locals {
+  os = "amzn"
 }
 
 provider "aws" {
@@ -83,7 +87,7 @@ resource "aws_security_group" "sg_22_80" {
   }
 }
 
-resource "aws_instance" "demo_server" {
+resource "aws_instance" "amzn_server" {
   ami                         = data.aws_ami.ami.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.subnet_public.id
@@ -91,7 +95,7 @@ resource "aws_instance" "demo_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "wecloud-packer"
+    Name = "wecloud-packer-terraform-${local.os}"
   }
 }
 
@@ -100,5 +104,5 @@ output "ami_id" {
 }
 
 output "public_ip" {
-  value = aws_instance.demo_server.public_ip
+  value = aws_instance.amzn_server.public_ip
 }

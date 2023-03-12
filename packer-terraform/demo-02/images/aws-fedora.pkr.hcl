@@ -40,7 +40,7 @@ source "amazon-ebs" "fedora" {
     most_recent = true
     owners      = ["679593333241"]
   }
-  ssh_username = "fedora"
+  ssh_username = "${local.ssh_user}"
 }
 
 # a build block invokes sources and runs provisioning steps on them.
@@ -52,7 +52,7 @@ build {
 
   provisioner "ansible" {
     playbook_file = "../playbooks/aws-amzn-playbook.yml"
-    user          = ${local.ssh_user}
+    user          = "${local.ssh_user}"
     use_proxy     = false
     ansible_ssh_extra_args = [
       "-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa"
