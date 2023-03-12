@@ -48,6 +48,11 @@ build {
 
   provisioner "ansible" {
     playbook_file = "../../playbooks/aws-amzn-playbook.yml"
+    user          = "ec2-user"
+    use_proxy     = false
+    ansible_ssh_extra_args = [
+      "-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa"
+    ]
   }
 
   /**
